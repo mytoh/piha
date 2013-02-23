@@ -1,0 +1,9 @@
+(spec
+ (name "piha")
+ (description "generate my project files")
+ (homepage "http://github.com/mytoh/piha")
+ (files ("bin/piha"
+         "lib/piha/cli.sls"
+         "lib/piha/commands.sls"
+         "lib/piha/commands/generate.sls"
+         "piha.lehspec")))
