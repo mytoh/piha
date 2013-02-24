@@ -50,7 +50,7 @@
 
     (define (content-lib-cli root)
       (string-join
-       '((string-append "(library (" root " cli)")
+       `(,(string-append "(library (" root " cli)")
          "(export runner)"
          "(import (silta base))"
          "(begin"
@@ -61,11 +61,11 @@
 
     (define (content-lib-root root)
       (string-join
-       '((string-append "(library (" root ")")
+       `(,(string-append "(library (" root ")")
          "(export " root ")"
          "(import (silta base))"
          "(begin"
-         (string-append "(define (" root ")")
+         ,(string-append "(define (" root ")")
          "'dummy)"
          "))")
        "\n"))
