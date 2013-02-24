@@ -1,4 +1,3 @@
-
 (library (piha cli)
     (export
       runner)
@@ -11,9 +10,9 @@
 
   (begin
 
-    (define (runner args)
-      (match-short-command (cadr args)
-        ("generate"
-         (command:generate (cddr args)))))
+      (define (runner args)
+        (match-short-command (cadr args)
+          ("generate"
+           (command:generate (cddr args)))))
 
     ))

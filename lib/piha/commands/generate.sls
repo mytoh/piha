@@ -1,19 +1,20 @@
 ;;; piha --- generate project files -*- lexical-binding: t -*-
 
-
 (library (piha commands generate)
     (export
       generate)
   (import
     (silta base)
     (silta write)
+    (srfi :13)
     (srfi :48 intermediate-format-strings)
     (loitsu file)
     (loitsu maali))
 
   (begin
 
-      ;; utility
+      ;;; utility
+
       (define (spit-file path content)
         (format #t "\t created ~a" (paint path "#adff2f"))
         (newline)
@@ -31,26 +32,6 @@
       (spit-file (build-path root "lib" (string-append root ".sls"))
                  (content-lib-root root)))
 
-    (define (content-lib-cli root)
-      (string-append
-          "(library (" root " cli)\n"
-          "(export runner)\n"
-          "(import (silta base))\n"
-          "(begin\n"
-          "(define (runner args)\n"
-          "(cadr args))\n"
-          "))\n"))
-
-    (define (content-lib-root root)
-      (string-append
-          "(library (" root ")\n"
-          "(export " root ")\n"
-          "(import (silta base))\n"
-          "(begin\n"
-          "(define (" root ")\n"
-          ")\n"
-          "))\n"))
-
     (define (generate-main-directory root)
       (cond
           ((file-exists? root)
@@ -62,6 +43,32 @@
     (define (generate-all root)
       (generate-main-directory root)
       (generate-library root))
+
+
+    ;;; contents
+
+    (define (content-lib-cli root)
+      (string-join
+       '((string-append "(library (" root " cli)")
+         "(export runner)"
+         "(import (silta base))"
+         "(begin"
+         "(define (runner args)"
+         "(cadr args))"
+         "))")
+       "\n"))
+
+    (define (content-lib-root root)
+      (string-join
+       '((string-append "(library (" root ")")
+         "(export " root ")"
+         "(import (silta base))"
+         "(begin"
+         (string-append "(define (" root ")")
+         "'dummy)"
+         "))")
+       "\n"))
+
 
     (define (generate args)
       (let ((root (car args)))
