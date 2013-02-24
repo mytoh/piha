@@ -6,7 +6,8 @@
   (import
     (silta base)
     (silta write)
-    (srfi :13)
+    (only (srfi :13)
+          string-join)
     (srfi :48 intermediate-format-strings)
     (loitsu file)
     (loitsu maali))
