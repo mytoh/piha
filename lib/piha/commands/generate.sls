@@ -62,7 +62,7 @@
     (define (content-lib-root root)
       (string-join
        `(,(string-append "(library (" root ")")
-         "(export " root ")"
+         ,(string-append "(export " root ")")
          "(import (silta base))"
          "(begin"
          ,(string-append "(define (" root ")")
