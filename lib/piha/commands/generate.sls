@@ -16,10 +16,12 @@
 
       ;;; utility
 
-      (define (spit-file path content)
-        (format #t "\t created ~a" (paint path "#adff2f"))
-        (newline)
-        (spit path content))
+    (define (spit-file path content)
+      (format #t "\t created ~a" (paint path "#adff2f"))
+      (newline)
+      (spit path content))
+
+    ;;; generates
 
     (define (generate-library root)
       (let ((lib-root (build-path root "lib")))
@@ -48,28 +50,37 @@
 
     ;;; contents
 
+    (define (content-library name exports imports body)
+      (let ((imps (string-join (map (lambda (x) (string-append "(" x ")"))
+                                 imports)
+                    "\n")))
+        (string-join
+            `(,(string-append "(library (" name ")")
+              ,(string-append "(export " exports ")")
+              ,(string-append "(import " imps ")")
+              "(begin"
+              ,body
+              "))")
+          "\n")))
+
     (define (content-lib-cli root)
-      (string-join
-       `(,(string-append "(library (" root " cli)")
-         "(export runner)"
-         "(import (silta base))"
-         "(begin"
-         "(define (runner args)"
-         "(cadr args))"
-         "))")
-       "\n"))
+      (let ((name (string-append root " " "cli"))
+            (exports "runner")
+            (imports `("silta base"))
+            (body (string-join '("(define (runner args)"
+                                 "(cadr args))") "\n")))
+        (content-library name exports imports body)))
 
     (define (content-lib-root root)
-      (string-join
-       `(,(string-append "(library (" root ")")
-         ,(string-append "(export " root ")")
-         "(import (silta base))"
-         "(begin"
-         ,(string-append "(define (" root ")")
-         "'dummy)"
-         "))")
-       "\n"))
+      (let ((name root)
+            (exports root)
+            (imports `("silta base"))
+            (body (string-join `(,(string-append "(define (" root ")")
+                                 "'dummy)") "\n")))
+        (content-library name exports imports body)))
 
+
+    ;;; main
 
     (define (generate args)
       (let ((root (car args)))
