@@ -10,7 +10,8 @@
           string-join)
     (srfi :48 intermediate-format-strings)
     (loitsu file)
-    (loitsu maali))
+    (loitsu maali)
+    (loitsu match))
 
   (begin
 
@@ -83,7 +84,9 @@
     ;;; main
 
     (define (generate args)
-      (let ((root (car args)))
-        (generate-all root)))
+      (match args
+        ((root)
+         (generate-all root))))
+
 
     ))
