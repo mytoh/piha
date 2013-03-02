@@ -11,6 +11,7 @@
     (srfi :48 intermediate-format-strings)
     (loitsu file)
     (loitsu maali)
+    (loitsu lamb)
     (loitsu match))
 
   (begin
@@ -51,14 +52,20 @@
 
     ;;; contents
 
+    (define-case wrap-paren
+      ((s)
+       (string-append "(" s ")"))
+      ((s . rest)
+       (wrap-paren (string-join (cons s rest)))))
+
     (define (content-library name exports imports body)
-      (let ((imps (string-join (map (lambda (x) (string-append "(" x ")"))
+      (let ((imps (string-join (map (lambda (x) (wrap-paren x))
                                  imports)
                     "\n")))
         (string-join
-            `(,(string-append "(library (" name ")")
-              ,(string-append "(export " exports ")")
-              ,(string-append "(import " imps ")")
+            `(,(string-append "(library " (wrap-paren name))
+              ,(wrap-paren "export" exports)
+              ,(wrap-paren "import" imps)
               "(begin"
               ,body
               "))")
