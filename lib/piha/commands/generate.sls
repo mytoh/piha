@@ -88,10 +88,16 @@
         (content-library name exports imports body)))
 
 
-    ;;; main
 
+    (define (help)
+      (display
+          "piha generate <name>\n"))
+
+    ;;; main
     (define (generate args)
       (match args
+        (()
+         (help))
         ((root)
          (generate-all root))))
 
